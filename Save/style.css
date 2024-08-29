@@ -1,0 +1,19 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#map {
+    margin: 20px auto;
+}
+
+#restaurant-list, #meal-plans {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.restaurant, .meal-plan {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Services - Xayona Website Template</title>
+		<link rel="stylesheet" href="css/style.css" type="text/css" />
+		<!--[if IE 7]>
+			<link rel="stylesheet" href="css/ie7.css" type="text/css" />
+		<![endif]-->
+	</head>
+	<body>
+
+
+		<div class="page">
+			<div class="header">
+				<a href="index.html" id="logo"><img src="images/logo.jpg" width="160" height="64" alt=""/></a>
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="about.html">About</a></li>
+					<li><a href="blog.html">Blog</a></li>
+					<li class="selected"><a href="member.html">Services</a></li>
+				</ul>
+			</div>
+
+			<div>
+				<form name="form" action="http://localhost:3000/Project/insert_member.php" method="POST" accept-charset="UTF-8" align="center">
+					<div class="detail_box clearfix">
+						<div class="link_box">
+							<h3>新增成員</h3>
+							<ul>
+								<li>
+									成員名稱: <input type="text" name="TheName" size="30" /> <br/><br/>
+								</li>
+								<input type="reset" value="清除表單">
+								<input type="submit" align="right" value="送出">
+								</br>
+							</ul>
+						</div>
+					</div>
+				</form>
+			</div>
+			
+			<div>
+				<form name="form" action="http://localhost:3000/Project/delete_member.php" method="POST" accept-charset="UTF-8" align="center">
+					<div class="detail_box clearfix">
+						<div class="link_box">
+							<h3>刪除成員</h3>
+							<ul>
+								<li>
+									成員名稱: <input type="text" name="Name" size="30" /> <br/><br/>
+								</li>
+								<input type="reset" value="清除表單">
+								<input type="submit" align="right" value="送出">
+								</br>
+							</ul>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div>
+				<form name="form" action="http://localhost:3000/Project/search_member.php" method="POST" accept-charset="UTF-8" align="center">
+					<div class="detail_box clearfix">
+						<div class="link_box">
+							<h3>成員查詢/送出</h3>
+							<ul>
+								<li>
+									成員名稱: <input type="text" name="TheName" size="30" /> <br/><br/>
+								</li>
+								<input type="reset" value="清除表單">
+								<input type="submit" align="right" value="送出">
+								</br>
+							</ul>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="footer">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="about.html">About</a></li>
+					<li><a href="blog.html">Blog</a></li>
+					<li><a href="member.html">Gallery</a></li>
+				</ul>
+				<p>&#169; Copyright &#169; 2011. Company name all rights reserved</p>
+				<div class="connect">
+					<a href="http://facebook.com/freewebsitetemplates" id="facebook">facebook</a>
+					<a href="http://twitter.com/fwtemplates" id="twitter">twitter</a>
+					<a href="http://www.youtube.com/fwtemplates" id="vimeo">vimeo</a>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>  

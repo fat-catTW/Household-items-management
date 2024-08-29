@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>購物清單管理</title>
+    <link rel="stylesheet" href="css/style.css" type="text/css"/>
+    <script>
+        function toggleInputs() {
+            var operation = document.getElementById("operation").value;
+            var queryInputs = document.getElementById("queryInputs");
+            var insertInputs = document.getElementById("insertInputs");
+            var deleteInputs = document.getElementById("deleteInputs");
+
+            queryInputs.style.display = "none";
+            insertInputs.style.display = "none";
+            deleteInputs.style.display = "none";
+
+            if (operation === "query") {
+                queryInputs.style.display = "block";
+            } else if (operation === "insert") {
+                insertInputs.style.display = "block";
+            } else if (operation === "delete") {
+                deleteInputs.style.display = "block";
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="page">
+    <div class="header">
+        <a href="index.html" id="logo"><img src="images/logo.jpg" width="160" height="64" alt=""/></a>
+        <ul>
+            <li><a href="index.html">首頁</a></li>
+            <li class="selected"><a href="shoppinglist.php">購物清單</a></li>
+            <li><a href="stock.php">庫存</a></li>
+            <li><a href="member.php">成員</a></li>
+        </ul>
+    </div>
+    <div class="body">
+        <div id="header">
+            <h1>購物清單</h1>
+        </div>
+        <div id="contents">
+            <!-- 操作选择表单 -->
+            <form method="post" action="">
+                <label for="operation">選擇操作：</label>
+                <select id="operation" name="operation" onchange="toggleInputs()">
+                    <option value="query">查詢</option>
+                    <option value="insert">新增</option>
+                    <option value="delete">删除</option>
+                </select>
+                <br>
+                
+                <!-- 查詢输入框 -->
+                <div id="queryInputs" style="display:block;">
+                    <label for="queryMember">成員：</label>
+                    <input type="text" id="queryMember" name="queryMember">
+                </div>
+
+                <!-- 新增输入框 -->
+                <div id="insertInputs" style="display:none;">
+                    <label for="insertID">ID：</label>
+                    <input type="text" id="insertID" name="insertID">
+                    <br>
+                    <label for="insertProduct">產品：</label>
+                    <input type="text" id="insertProduct" name="insertProduct">
+                    <br>
+                    <label for="insertPrice">價格：</label>
+                    <input type="text" id="insertPrice" name="insertPrice">
+                    <br>
+                    <label for="insertNumber">數量：</label>
+                    <input type="text" id="insertNumber" name="insertNumber">
+                    <br>
+                    <label for="insertOwner">成員：</label>
+                    <input type="text" id="insertOwner" name="insertOwner">
+                </div>
+
+                <!-- 删除输入框 -->
+                <div id="deleteInputs" style="display:none;">
+                    <label for="deleteID">ID：</label>
+                    <input type="text" id="deleteID" name="deleteID">
+                </div>
+
+                <input type="submit" value="執行">
+            </form>
+        </div>
+    </div>
+
+    <style>
+        table {
+            margin: 0 auto; /* 居中显示表格 */
+            border-collapse: collapse; /* 合并表格边框 */
+        }
+        th, td {
+            border: 1px solid black; /* 设置表格边框 */
+            padding: 8px; /* 设置单元格内边距 */
+            text-align: left; /* 文本左对齐 */
+        }
+        th {
+            background-color: #f2f2f2; /* 设置表头背景颜色 */
+        }
+    </style>
+
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        include "db_connect.php";
+
+        $operation = $_POST['operation'];
+
+        if ($operation === 'query') {
+            $queryMember = $_POST['queryMember'];
+            if (!empty($queryMember)) {
+                $sql = "SELECT * FROM dbo.shoppinglist WHERE owner = ?";
+                $params = array($queryMember);
+            } else {
+                $sql = "SELECT * FROM dbo.shoppinglist";
+                $params = array();
+            }
+
+            $stmt = sqlsrv_query($conn, $sql, $params);
+
+            if ($stmt === false) {
+                echo "查询失败: " . print_r(sqlsrv_errors(), true);
+            } else {
+                echo "<div class='center'>";
+                echo "<h2>查詢结果</h2>";
+                echo "</div>";
+
+                echo "<table border='1'>";
+                echo "<tr><th>ID</th><th>產品</th><th>價格</th><th>數量</th><th>所有人</th></tr>";
+
+                while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($row['ID']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['product']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['price']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['number']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['owner']) . "</td>";
+                    echo "</tr>";
+                }
+
+                echo "</table>";
+            }
+        } elseif ($operation === 'insert') {
+            $insertID = $_POST['insertID'];
+            $insertProduct = $_POST['insertProduct'];
+            $insertPrice = $_POST['insertPrice'];
+            $insertNumber = $_POST['insertNumber'];
+            $insertOwner = $_POST['insertOwner'];
+
+            $sql = "INSERT INTO dbo.shoppinglist (ID, product, price, number, owner) VALUES (?, ?, ?, ?, ?)";
+            $params = array($insertID, $insertProduct, $insertPrice, $insertNumber, $insertOwner);
+
+            $stmt = sqlsrv_query($conn, $sql, $params);
+            
+            echo "<div class='center'>";
+            if ($stmt === false) {
+                echo "新增失败: " . print_r(sqlsrv_errors(), true);
+            } else {
+                echo "新增成功";
+            }
+            echo "</div>";
+        } elseif ($operation === 'delete') {
+            $deleteID = $_POST['deleteID'];
+
+            $sql = "DELETE FROM dbo.shoppinglist WHERE ID = ?";
+            $params = array($deleteID);
+
+            $stmt = sqlsrv_query($conn, $sql, $params);
+            
+            echo "<div class='center'>";
+            if ($stmt === false) {
+                echo "删除失败: " . print_r(sqlsrv_errors(), true);
+            } else {
+                echo "删除成功";
+            }
+            echo "</div>";
+        }
+
+        sqlsrv_close($conn);
+    }
+    ?>
+
+    <div class="footer">
+        <ul>
+            <li><a href="index.html">首頁</a></li>
+            <li><a href="shoppinglist.php">購物清單</a></li>
+            <li><a href="stock.php">庫存</a></li>
+            <li><a href="member.php">成員</a></li>
+        </ul>
+        <p>&#169; 人生就像打電話 &#169; 不是你先掛，就是我先掛。</p>
+        <div class="connect">
+            <a href="http://facebook.com/freewebsitetemplates" id="facebook">facebook</a>
+            <a href="http://twitter.com/fwtemplates" id="twitter">twitter</a>
+            <a href="http://www.youtube.com/fwtemplates" id="vimeo">vimeo</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
